@@ -10,6 +10,18 @@
 	if(HAS_TRAIT(src, TRAIT_UNSEEMLY) && user != src)
 		if(!HAS_TRAIT(user, TRAIT_UNSEEMLY))
 			user.add_stress(/datum/stressevent/unseemly)
+
+	// Hideous face: makes onlookers scream and warns them in chat.
+	if(HAS_TRAIT(src, TRAIT_HIDE0US_FACE) && user != src)
+		var/next_allowed = user.hideous_face_next_scream
+		if(!isnum(next_allowed))
+			next_allowed = null
+		if(isnull(next_allowed) || world.time >= next_allowed)
+			user.hideous_face_next_scream = world.time + (10 SECONDS)
+			user.emote("scream")
+			to_chat(user, span_userdanger("I recoil in terror — [src]'s face is unspeakably hideous!"))
+			if(user.can_heartattack() && !user.undergoing_cardiac_arrest())
+				user.heart_attack_fake()
 	if(HAS_TRAIT(src, TRAIT_LEPROSY) && user != src)
 		user.add_stress(/datum/stressevent/leprosy)
 	if(HAS_TRAIT(src, TRAIT_BEAUTIFUL_UNCANNY) && user != src)
