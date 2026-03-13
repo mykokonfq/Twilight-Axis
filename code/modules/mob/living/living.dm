@@ -1266,8 +1266,9 @@
 		if(!HAS_TRAIT(src, TRAIT_GARROTED))
 			combat_modifier -= 0.3
 		else
+			combat_modifier -= 0.3 // garrote is always harder to escape than a regular grab
 			if(!src.mind)
-				combat_modifier -= 0.3
+				combat_modifier -= 0.3 // mindless victims are even less capable of escaping
 			if(HAS_TRAIT(L, TRAIT_BLACKBAGGER))
 				combat_modifier -= 0.3
 				if(HAS_TRAIT(src, TRAIT_BAGGED))
@@ -1337,7 +1338,7 @@
 		var/obj/item/inqarticles/garrote/gcord = L.get_active_held_item()
 		if(!gcord)
 			gcord = L.get_inactive_held_item()
-		gcord.take_damage(gcord.max_integrity)
+		gcord.take_damage(gcord.max_integrity / 3) // Escaping strains the cordage, but doesn't always snap it outright
 		gcord.wipeslate(src)
 	log_combat(L, src, "broke grab")
 	L.changeNext_move(agg_grab ? CLICK_CD_GRABBING : CLICK_CD_GRABBING + 1 SECONDS)
